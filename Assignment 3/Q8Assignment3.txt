@@ -1,0 +1,13 @@
+public class OpportunityUpdate {
+    
+    public void updateOfOpportunities(List<Opportunity> oppList){
+        List<Opportunity> updatedOpportunity = new List<Opportunity>();
+        for(Opportunity op : oppList){
+            if(op.BillToContact__c != null && op.Manager__c == null){
+                op.Manager__c = op.BillToContact__r.AccountId;
+                updatedOpportunity.add(op);
+            }
+        }
+        update updatedOpportunity; 
+    }
+}

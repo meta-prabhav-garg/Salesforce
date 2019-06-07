@@ -1,0 +1,19 @@
+public class ListOfStudentClassWise {
+    public static List<Student__c> ListOfStudent(Id classid){
+    	List<Student__c> studentList = new List<Student__c>();
+        studentList = [Select id, First_name__c, LastName__c from Student__c where class__c =: classid  ];
+        system.debug('Student List is' + studentList);   
+        return studentList;
+    }
+public static Map<String,Set<Id>> mappingFunction(){
+       Map<String,Set<Id>> mapping = new Map<String,Set<Id>>();
+       for(Class__c con1 : [SELECT Id, Name,(Select Id From Students__r) FROM Class__c]){
+           Set<id> iss = new Set<id>();
+           for(Student__c con : [ SELECT Id FROM Student__c WHERE Class__r.Name=: con1.Name]){
+               iss.add(con.id);
+           }
+           mapping.put(con1.Name, iss);
+       }
+       return mapping;
+   }
+}
