@@ -1,0 +1,22 @@
+public class AccountContactRelatedList { 
+    public static void updateAccountWithContactID(Id contactId){
+        Contact contactById = [SELECT Account.Id, Account.ContactIDs__c FROM Contact WHERE Id = :contactID];
+        Account accountOfContact = contactById.Account;
+        if(accountOfContact.ContactIDs__c == null){
+            List<Contact> contactRelatedToAccount = [SELECT Id FROM Contact WHERE Account.Id = :accountOfContact.ID];
+            String contactIDList='';
+            for(Contact con : contactRelatedToAccount){
+                contactIDList  = contactIDList+con.Id+', ';
+            }
+            contactIDList = contactIDList.removeEnd(', ');
+            accountOfContact.ContactIDs__c = contactIDList;
+            update accountOfContact;
+        }
+        else{
+            if(!accountOfContact.ContactIDs__c.contains(contactID)){
+                accountOfContact.ContactIDs__c = accountOfContact.ContactIDs__c +', '+contactID;
+                update accountOfContact;
+            }
+        }
+    }
+}

@@ -1,0 +1,17 @@
+public class NumberOfDaysBetweenTwoDates {
+    public static Integer NumberOfDays(Date startDate, Date endDate){
+        Integer i = 0;
+        startDate = startDate.addDays(1);
+        while(startDate < endDate){
+            Integer d = startDate.day();
+            Integer mo = startDate.month();
+            Integer yr = startDate.year();
+            DateTime DT = DateTime.newInstance(yr, mo, d);
+            if(DT.format('E') != 'Sat' && DT.format('E') != 'Sun'){
+                i++;
+            }
+            startDate = startDate.addDays(1);
+        }
+        return i;
+    }
+}

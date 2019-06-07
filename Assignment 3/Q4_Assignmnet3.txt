@@ -1,0 +1,30 @@
+public class stackImplementation {
+    private List<object> items {get; set;}
+    public stackImplementation(){
+    	this.items = new List<object>();    
+    }
+    public Integer size(){
+        return this.items.size();
+    }
+    public Boolean isEmpty(){
+        return size() == 0;
+    }
+    public void push(object item){
+        this.items.add(item);
+    }
+    public object pop(){
+        if(isEmpty()){
+            throw new StackUnderflowException();
+        }
+        return this.items.remove(size() - 1);
+    }
+    public object peep(){
+        if(isEmpty()){
+            throw new StackUnderflowException();
+        }
+    return this.items.get(size() - 1);
+    }
+    public class StackUnderflowException extends Exception {
+    /* Custom exception */
+	}
+}
