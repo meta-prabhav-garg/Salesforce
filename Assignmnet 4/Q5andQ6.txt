@@ -1,7 +1,7 @@
 trigger oppoTrigger on Opportunity (before update, After UPDATE) {
     if (Trigger.IsBefore && Trigger.isUpdate) {
 		for (Opportunity opp:Trigger.New) {
- 			if (opp.StageName == 'Closed won' || opp.StageName == 'Closed lost') {
+ 			if ((Trigger.oldMap.get(opp.Id).StageName != 'Closed Won' ||  Trigger.oldMap.get(opp.Id).StageName != 'Closed Won') && (opp.StageName == 'Closed Won' || opp.StageName == 'Closed Lost')) {
 				opp.CloseDate = System.Today();
 			}
 		}
