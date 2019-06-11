@@ -1,0 +1,7 @@
+trigger TriggerOnTeacher on Contact (before insert, before update ) {
+    for (Contact con : Trigger.new){
+        if(con.Subjects__c.contains('Hindi')){
+            con.addError('Hindi Teacher is Already Exist');
+        }
+    }
+}

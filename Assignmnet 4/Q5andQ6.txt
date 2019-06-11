@@ -1,0 +1,28 @@
+trigger oppoTrigger on Opportunity (before update, After UPDATE) {
+    if (Trigger.IsBefore && Trigger.isUpdate) {
+		for (Opportunity opp:Trigger.New) {
+ 			if (opp.StageName == 'Closed won' || opp.StageName == 'Closed lost') {
+				opp.CloseDate = System.Today();
+			}
+		}
+	}
+    if(Trigger.IsAfter && Trigger.IsUpdate){
+        Set<Id> oppoSet = new Set<Id>();
+        for(Opportunity opp : trigger.new){
+            if(opp.custom_status__c == 'Reset'){
+                oppoSet.add(opp.id);
+            }
+        }
+        if(oppoSet != null && oppoSet.size() > 0){
+            List<OpportunityLineItem> listDelete = new List<OpportunityLineItem>();
+            for(Opportunity oppp :[Select Id,(Select id from OpportunityLineItems) From Opportunity Where Id In: oppoSet] ){
+                if(oppp.OpportunityLineItems != Null && oppp.OpportunityLineItems.size() > 0){
+                    listDelete.addAll(oppp.OpportunityLineItems);
+                }
+            }
+            if(listDelete != null && listDelete.size() > 0){
+                DELETE listDelete;
+            }
+        }
+    }
+}

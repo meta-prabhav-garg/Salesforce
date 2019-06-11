@@ -1,0 +1,9 @@
+trigger Do_Not_Delete_Class on Class__c (before delete) {
+    list <class__C> clss = [SELECT id, (Select sex__c from students__r where sex__c = 'Female') From class__c where id IN :Trigger.old];
+    for(class__c cl : clss){
+        if(cl.students__r.size() > 0){
+            Trigger.oldmap.get(cl.id).addError('This Class cannot delete because it has atleast one Female Student');
+        }
+    }
+
+}
