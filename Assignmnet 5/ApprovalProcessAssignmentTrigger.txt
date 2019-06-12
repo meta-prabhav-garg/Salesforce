@@ -1,0 +1,27 @@
+trigger LoanTrigger on Loan__c (before insert, before Update) {
+    Set<String> setOfCity = new Set<String>();
+    if (Trigger.IsBefore && Trigger.isInsert){
+        for(Loan__c ll : Trigger.New){
+            setOfCity.add(ll.City__c.capitalize());
+        }
+        Map<String, id> mapOfManagerbyCity = new Map<String, id>();
+        for(CityManager__c cm : [Select City__c, Manager__r.Username From CityManager__c Where City__c IN: setOfCity]){
+            mapOfManagerbyCity.put(cm.City__c, cm.Manager__c);
+        }
+        for(Loan__c lll : Trigger.New){
+            lll.Manager__c = mapOfManagerbyCity.get(lll.City__c.capitalize());
+        }
+    }
+     if (Trigger.IsBefore && Trigger.isUpdate){
+        for(Loan__c ll : Trigger.New){
+            setOfCity.add(ll.City__c.capitalize());
+        }
+        Map<String, id> mapOfManagerbyCity = new Map<String, id>();
+        for(CityManager__c cm : [Select City__c, Manager__r.Username From CityManager__c Where City__c IN: setOfCity]){
+            mapOfManagerbyCity.put(cm.City__c, cm.Manager__c);
+        }
+        for(Loan__c lll : Trigger.New){
+            lll.Manager__c = mapOfManagerbyCity.get(lll.City__c.capitalize());
+        }
+    }
+}
