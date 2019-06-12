@@ -1,0 +1,47 @@
+trigger StudentTrigger on Student__c (before insert, after insert, before delete) {
+    Map<Id, Class__c> mapOfClass = new Map<Id, Class__c>();
+    List<Class__c> listOfClass = [Select id, MyCount__c, maxSize__c  from Class__c];
+    for(class__c cl : listOfClass) {
+        mapOfClass.put(cl.Id, cl);
+    }
+    if(Trigger.isBefore && Trigger.isInsert){
+        for (student__c stu : Trigger.New ){
+            Class__c stuClass = mapOfClass.get(stu.Class__c);
+            if(stuClass.MyCount__c >= stuClass.MaxSize__c){
+                stu.addError('Student Can\'t Get Admission Because Class is Full ');
+            }
+        }
+    }        
+    if(Trigger.isAfter && trigger.isInsert){
+        for(Student__c stu1 : Trigger.new){
+                                Decimal currentCount;
+                                Class__c cls = mapOfClass.get(stu1.Class__c);
+                                if(mapOfClass.containsKey(stu1.class__c)){
+                                    cls.MyCount__c = cls.MyCount__c + 1;
+                                }
+                                else{
+                                    cls.MyCount__c = 1;
+                                }
+          }
+    }
+    if(Trigger.isBefore && Trigger.isDelete){
+        for(Student__c stu : Trigger.old){
+            Decimal currentCount;
+            Class__c cls = mapOfClass.get(stu.Class__c);
+            if(mapOfClass.containsKey(stu.Class__c)){
+               cls.MyCount__c = cls.MyCount__c - 1;
+            }
+            else{
+              cls.MyCount__c = 1;
+            }
+        }
+    }
+    if(mapOfClass.size() > 0) {
+        for(Class__c cls : listOfClass) {
+            System.debug(mapOfClass.get(cls.id));
+            Class__c clsSS = mapOfClass.get(cls.id);
+            cls.MyCount__c = clsSS.MyCount__c;
+        }
+        update listOfClass;
+    }
+}
