@@ -1,0 +1,42 @@
+<apex:page controller="AccountsListController1" >
+    <apex:form >
+        <apex:commandButton value="Open Accounts Window" action="{!showList}" rerender="account_list"/>
+        <apex:commandButton value="Close Accounts Window" action="{!showListfalse}" rerender="account_list"/><br/>
+        <apex:outputPanel id="account_list">
+        <apex:pageBlock title="Accounts List" rendered="{!showTable}" id="accounts_list">
+             <apex:pageBlockSection title="Your Result" columns="4">
+           	 <h1>City</h1><apex:inputText value="{!valuecity}" id="theTextInput1"/>
+             <h1>State</h1><apex:inputText value="{!valuestate}" id="theTextInput2"/>
+             <h1>Country</h1><apex:inputText value="{!valuecountry}" id="theTextInput3"/>
+             <apex:commandButton value="Click" action="{!searchAccounts}" rerender="account_list"/>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection columns="2" >
+         <!--List -->
+		<apex:pageBlockTable value="{! account }" var="at">
+    	<apex:column value="{! at.Name }"/>
+    	<apex:column value="{! at.AccountNumber }"/>
+    	<apex:column value="{! at.BillingCity }"/>
+        <apex:column value="{! at.BillingState }"/>
+        <apex:column value="{! at.BillingCountry }"/>
+        </apex:pageBlockTable>
+        </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:pageBlock >
+            <apex:pageBlockSection Title="Page Navigation">
+                <apex:panelGrid columns="5">
+                    Total Record Found: 
+                    <apex:outputText rendered="{!IF(Con.resultSize==10000,true,false)}">10000
+                    + </apex:outputText>
+                    <apex:outputText rendered="{!IF(Con.resultSize < 10000,true,false)}">
+                    {!Con.resultSize}</apex:outputText>
+                    
+                    <apex:commandLink action="{!Previous}" title="Previous Page" value="Previous Page" rendered="{!Con.HasPrevious}"/>
+                    <apex:outputPanel styleClass="pShowLess noLink" style="color:grey" rendered="{!Not(Con.HasPrevious)}">Previous Page</apex:outputPanel>
+                    &nbsp;({!IF(Con.PageNumber == 1,1,((Con.PageNumber -1) * Con.PageSize)+1)} - {!IF(Con.resultSize < Con.PageSize, Con.resultSize, Con.pageNumber * Con.pageSize)})&nbsp;
+                    <apex:commandLink title="Next Page" value="Next Page" rendered="{!Con.HasNext}" action="{!Next}"/>&nbsp;
+                </apex:panelGrid>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        </apex:outputPanel>
+    </apex:form>
+</apex:page>

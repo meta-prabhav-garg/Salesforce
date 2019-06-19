@@ -1,0 +1,26 @@
+<apex:page standardController="Contact">
+   <apex:form >
+       <apex:pageBlock >
+           <apex:pageBlockButtons >
+               <apex:commandButton value="Edit" action="{!edit}"/>
+               <apex:commandButton value="Delete" action="{!delete}"/>
+               <apex:commandButton value="Clone" action="{!URLFOR($Action.Contact.Clone,Contact.id)}"/>
+           </apex:pageBlockButtons>
+           <p style="background-color:blue; color:white; font-size:16pt;" align="center" >
+        {!Contact.recordType.Name} Teacher
+           </p>
+           <apex:pageBlockSection columns="2">
+               <apex:outputField value="{!Contact.ownerId}"/>
+               <apex:outputField value="{!Contact.Phone}"/>
+               <apex:outputField value="{!Contact.name}"/>
+               <apex:outputField value="{!Contact.homePhone}"/>
+               <apex:outputField value="{!Contact.Account.Name}"/>
+               <apex:outputField value="{!Contact.mobilePhone}"/>
+               <apex:outputField value="{!Contact.Title}"/>
+               <apex:outputField value="{!Contact.otherPhone}"/>                
+               <apex:outputField value="{!Contact.Department}"/>
+               <apex:outputField value="{!Contact.fax}"/>
+           </apex:pageBlockSection>
+       </apex:pageBlock>
+   </apex:form>
+</apex:page>

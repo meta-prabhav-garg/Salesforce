@@ -1,0 +1,40 @@
+public class AccountsListController1 {
+   public boolean showTable {get; set;}
+   public string valuecity{get; set;}
+   public string valuestate{get; set;}
+   public string valuecountry{get; set;}
+   public boolean showResult{get; set;}
+   public List<Account> account {get;set;}
+   public AccountsListController1(){
+       this.showTable = False;
+       this.showResult = False;
+   }
+   public List<Account> getAccounts(){
+       List<Account> sobjList;
+       String query = 'Select id, Name, accountnumber, BillingCity, BillingState, BillingCountry from Account';
+       if( valuecity != null && valuestate != null && valuecountry != null){
+           query = query + ' where';
+           List<String> str = new List<String>();
+           if( String.isNotBlank(valueCity)){
+               str.add(' Billingcity = ' + '\''+  valuecity +'\'' );
+           }
+           if( String.isNotBlank(valueState)){
+               str.add(' Billingstate = ' + '\''+ valuestate+'\'');
+           }
+           if( String.isNotBlank(valueCountry)){
+               str.add(' Billingcountry = ' + '\''+ valuecountry+'\'');
+           }
+           
+           Query=query+String.join(str,'AND'); 
+       }
+       System.debug(query);
+       sobjList = Database.query(query);
+       
+       
+       return sobjList;
+   }
+   public void showList(){this.showTable = true;}
+   public void showListfalse(){this.showTable = false;}
+   public void showResultTrue(){this.showResult = true;} 
+   public void showResultFalse(){this.showResult = false;}
+}

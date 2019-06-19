@@ -1,0 +1,24 @@
+public class GeneratePdfController {
+    public Student__c student;
+    public GeneratePdfController(ApexPages.StandardController pageController){
+        student = (Student__c)pageController.getRecord();
+    }
+    
+    public PageReference generatePdfMethod(){
+        PageReference page = new PageReference('/apex/StudentDetail?id='+student.id);
+        List<Attachment> attachlist = [Select id FROM Attachment WHERE Name = 'StudentDetail.pdf'];
+        if(attachlist.size() > 0){
+            delete attachlist;
+        }
+        Blob content = page.getContent();
+        Attachment attach = new Attachment();
+        attach.body = content;
+        attach.ParentId = student.Id;
+        attach.Name = 'StudentDetail.pdf';
+        insert attach;
+        
+        pageReference page1 = new PageReference('/'+ student.Id);
+        page1.setRedirect(true);
+        return page1;
+    }
+}
