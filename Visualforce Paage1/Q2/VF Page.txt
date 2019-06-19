@@ -1,0 +1,26 @@
+<apex:page controller="AccountsListController1" >
+    <apex:form >
+        <apex:commandButton value="Open Accounts Window" action="{!showList}" rerender="account_list"/>
+        <apex:commandButton value="Close Accounts Window" action="{!showListfalse}" rerender="account_list"/><br/>
+        <apex:outputPanel id="account_list">
+        <apex:pageBlock title="Accounts List" rendered="{!showTable}" id="accounts_list">
+             <apex:pageBlockSection title="Your Result" columns="4">
+           	 <h1>City</h1><apex:inputText value="{!valuecity}" id="theTextInput1"/>
+             <h1>State</h1><apex:inputText value="{!valuestate}" id="theTextInput2"/>
+             <h1>Country</h1><apex:inputText value="{!valuecountry}" id="theTextInput3"/>
+             <apex:commandButton value="Click" action="{!showResultTrue}" rerender="account_list"/>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection columns="2" >
+         <!--List -->
+		<apex:pageBlockTable value="{! accounts }" var="at">
+    	<apex:column value="{! at.Name }"/>
+    	<apex:column value="{! at.AccountNumber }"/>
+    	<apex:column value="{! at.BillingCity }"/>
+        <apex:column value="{! at.BillingState }"/>
+        <apex:column value="{! at.BillingCountry }"/>
+        </apex:pageBlockTable>
+        </apex:pageBlockSection>
+        </apex:pageBlock>
+        </apex:outputPanel>
+    </apex:form>
+</apex:page>

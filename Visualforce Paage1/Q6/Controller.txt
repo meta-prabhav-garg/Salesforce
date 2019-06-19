@@ -1,0 +1,14 @@
+public class ConvertToJsonController {
+    public Contact con{get; set;}
+    public String result{get; set;}
+    
+    public ConvertToJsonController(ApexPages.StandardController controller){
+        con = (Contact)controller.getRecord();
+    }
+    
+    public void convert(){
+        Contact con1 = [SELECT id, Name, account.Name FROM Contact where id =: con.id limit 1];
+        result = JSON.serializePretty(con1);
+    }
+
+}

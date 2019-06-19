@@ -1,0 +1,90 @@
+public class AccountsListController1 {
+   public boolean showTable {get; set;}
+   public string valuecity{get; set;}
+   public string valuestate{get; set;}
+   public string valuecountry{get; set;}
+   public boolean showResult{get; set;}
+   public List<Account> account {get;set;}
+   public ApexPages.standardSetController con{
+        get{
+            if(con == null){
+                String query = 'Select id, Name, accountnumber, BillingCity, BillingState, BillingCountry from Account';
+                con = new ApexPages.StandardSetController(Database.getQueryLocator(query));
+                //Record on each page
+                con.setPageSize(5);
+                account = con.getRecords();
+                
+            }
+            return con;
+        }
+        set;
+    }
+    public boolean hasNext{
+        get{
+            return con.getHasNext();
+        }
+        set;
+    }
+    public boolean hasPrevious{
+        get{
+            return con.getHasPrevious();
+        }
+        set;
+    }
+    public Integer pageNumber{
+        get{
+            return con.getPageNumber();
+        }
+        set;
+    }
+    public void first(){
+        con.first();
+    }
+    public void last(){
+        con.last();
+    }
+    public void previous(){
+        con.previous();
+        account = con.getRecords();
+    }
+    public void next(){
+        con.next();
+        account = con.getRecords();
+    }
+    public void cancel(){
+        con.cancel();
+    }
+   public AccountsListController1(){
+       this.showTable = False;
+       this.showResult = False;
+   }
+   public void searchAccounts(){
+       String query = 'Select id, Name, accountnumber, BillingCity, BillingState, BillingCountry from Account';
+       if( String.isNotBlank(valuecity) || String.isNotBlank(valuestate) || String.isNotBlank(valuecountry)){
+           query = query + ' where';
+           List<String> str = new List<String>();
+           if( String.isNotBlank(valueCity)){
+               str.add(' Billingcity = ' + '\''+  valuecity +'\'' );
+           }
+           if( String.isNotBlank(valueState)){
+               str.add(' Billingstate = ' + '\''+ valuestate+'\'');
+           }
+           if( String.isNotBlank(valueCountry)){
+               str.add(' Billingcountry = ' + '\''+ valuecountry+'\'');
+           }
+           
+           Query=query+String.join(str,'AND'); 
+       }
+       //sobjList = Database.query(query);
+       con = new ApexPages.StandardSetController(Database.getQueryLocator(query));
+       //system.assert(false, con.getRecords());
+      // con.setPageSize(3);
+      account = con.getRecords();
+       //return account;
+       //return con.getRecords();
+   }
+   public void showList(){this.showTable = true;}
+   public void showListfalse(){this.showTable = false;}
+   public void showResultTrue(){this.showResult = true;} 
+   public void showResultFalse(){this.showResult = false;}
+}

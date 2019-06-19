@@ -1,0 +1,33 @@
+public class SelectBillToContactController {
+    public Opportunity opportunity{get; set;}
+    public Id selectedId{get;set;}
+    public SelectBillToContactController(){
+        this.opportunity =[SELECT BillToContact__c, Manager__r.Name FROM Opportunity WHERE id=:ApexPages.currentPage().getParameters().get('id')];
+    }
+    public List<Contact> getContacts(){
+        return [SELECT Id, Name FROM Contact WHERE AccountId=:opportunity.Manager__c];
+    }
+    public List<SelectOption> getOptions(){
+        List<SelectOption> results = new List<SelectOption>();
+        for(Contact c: getContacts()){
+            results.add(new SelectOption(c.id,c.Name));
+        }
+        return results;
+    }
+    public PageReference saveContact(){
+        opportunity.BillToContact__c = selectedId;
+        update opportunity;
+        PageReference page = new PageReference('/'+opportunity.Id);
+        return page;
+    }
+    public PageReference clearContact(){
+        opportunity.BillToContact__c = null;
+        update opportunity;
+        PageReference page = new PageReference('/'+opportunity.Id);
+        return page;
+    }
+    public PageReference cancelContact(){
+        PageReference page = new PageReference('/'+opportunity.Id);
+        return page;
+    }
+}

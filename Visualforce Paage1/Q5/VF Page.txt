@@ -1,0 +1,23 @@
+<apex:page standardController="Student__c" renderAs="pdf">
+    <apex:form > <apex:pageBlock title="Student Details">
+       <apex:panelGrid columns="2" width="100%">
+           <apex:outputText >Student ID</apex:outputText>
+           <apex:outputText >{!Student__c.Name}</apex:outputText>
+           <apex:outputText >Student Name</apex:outputText>
+           <apex:outputText >{! Student__c.First_Name__c} {! Student__c.LastName__c} </apex:outputText>
+           <apex:outputText >Student Class</apex:outputText>
+           <apex:outputText >{! Student__c.Class__r.Name} </apex:outputText>
+           <apex:outputText >Student's Date Of Birth</apex:outputText>
+           <apex:outputText >{! Student__c.DOB__c} </apex:outputText>
+            <apex:outputText >Students Age</apex:outputText>
+           <apex:outputText >{! Student__c.Age__c} </apex:outputText>
+            <apex:outputText >Student's Email</apex:outputText>
+           <apex:outputText >{! Student__c.Email__c} </apex:outputText>
+            <apex:outputText >Sex</apex:outputText>
+           <apex:outputText >{! Student__c.Sex__c } </apex:outputText>
+            <apex:outputText >Credit Card Number</apex:outputText>
+           <apex:outputText >{! Student__c.Credit_card_number__c } </apex:outputText>
+       </apex:panelGrid>
+       </apex:pageBlock>
+   </apex:form>   
+</apex:page>

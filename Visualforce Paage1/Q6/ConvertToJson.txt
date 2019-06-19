@@ -1,0 +1,10 @@
+<apex:page standardController="Contact" extensions="ConvertToJsonController">
+    <apex:form >
+        <apex:pageBlock >
+            <apex:commandButton value="Convert" action="{!convert}"/>
+            <apex:pageBlockSection title="Converted Result Json">
+                {!result}
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

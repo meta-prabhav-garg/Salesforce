@@ -1,0 +1,2 @@
+<apex:page action="{!generatePdfMethod}" extensions="GeneratePdfController" standardController="Student__c">
+</apex:page>
