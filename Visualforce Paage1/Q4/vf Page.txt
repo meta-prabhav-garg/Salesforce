@@ -1,0 +1,17 @@
+<apex:page controller="SelectbillToContactController">
+    <apex:form>
+        <apex:pageBlock>
+            <apex:outputField value="{!opportunity.Manager__r.Name}"/>
+            <apex:pageBlockSection>
+                <apex:selectRadio value="{!selectedId}">
+                    <apex:selectOptions value="{!options}"></apex:selectOptions>
+                </apex:selectRadio>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Save" action="{!saveContact}"/>
+                <apex:commandButton value="Clear" action="{!clearContact}"/>
+                <apex:commandButton value="Cancel" action="{!cancelContact}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

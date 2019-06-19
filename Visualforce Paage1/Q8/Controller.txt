@@ -1,0 +1,70 @@
+public class ManageClassController {
+   public Id classTobeEditedId {get; set;}
+   public boolean showEditArea { get; set;}
+   public Class__c classToUpdate { get;set;}
+   public ManageClassController() {
+       showEditArea = False;
+   }
+   public ApexPages.StandardSetController setCon {
+       get{
+           if(setCon==null) {
+               List<Class__c> classList = [SELECT Name , ClassTeacher__r.Name, MaxSize__c , Custom_Status__c , MyCount__c FROM Class__c];
+               setCon = new ApexPages.StandardSetController(classList);
+               setCon.setpageSize(10);
+           }
+           return setCon;
+       }
+       set;
+   }
+   public List<Class__c> getClasses() {
+	return [SELECT Id, Name , MaxSize__c, Custom_Status__c, MyCount__c FROM Class__c];
+   }
+   public void editClass() {
+       classToUpdate = [SELECT Name , MaxSize__c, Custom_Status__c FROM Class__c WHERE Id = :classTobeEditedId];
+       showEditArea=True;
+   }
+   public void deleteClass()
+   {
+       Class__C classToDelete = [SELECT Name , MaxSize__c, Custom_Status__c FROM Class__c WHERE Id = :classTobeEditedId];
+       delete classToDelete;
+       showEditArea=False;
+   }
+   public void updateClass() {
+       update classToUpdate;
+       showEditArea=False;
+   }
+   public void cancelUpdate() {
+    classToUpdate = null;
+       showEditArea=False;
+   }
+   public boolean hasNext{
+      get{
+          return setcon.getHasNext();
+      }
+      set;
+   }
+   public boolean hasPrevious{
+      get{
+          return setcon.getHasPrevious();
+      }
+      set;
+    }
+    public Integer pageNumber{
+        get{
+            return setcon.getPageNumber();
+        }
+        set;
+    }
+    public void cancel(){
+        setCon.cancel();
+    }
+   public Integer getPageSize() {return setCon.getPageSize();}
+   public Integer getPageNumber() {return setCon.getPageNumber();}
+   public Integer getResultSize() {return setCon.getResultSize();}
+   public void next() { setCon.next(); }
+   public void previous() { setCon.previous(); }
+   public void first() { setCon.first(); }
+   public void last() { setCon.last(); }
+   public Boolean getHasNext() { return setCon.getHasNext(); }
+   public Boolean getHasPrevious() { return setCon.getHasPrevious(); }
+}
