@@ -1,0 +1,68 @@
+<apex:page controller="ShoppingCartController" docType="html-5.0">
+    <apex:form >
+        <apex:pageBlock title="Purchase Order History">
+            <apex:pageBlockTable value="{! PurchaseOrder}" var="item"> 
+                <apex:column value="{! item.id}"/>
+                <apex:column value="{!item.ToTal_Price__c}"/>
+                <apex:column value="{!item.Order_Status__c}"/>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+        <div align="center" draggable="false" >
+            <apex:commandButton value="Add New Purchase"  action="{!showListOfProducts}" rerender="Product_List"/>
+        </div>
+        <apex:outputPanel id="Product_List">
+            <apex:pageBlock id="allProductsVFPage" title="Products" rendered="{!ShowProducts}">
+                <apex:inputText value="{! searchValue}" id="name" html-placeholder="Search Products" list="{!listOfStrings}"/>
+                <apex:commandButton value="Add To Cart" style="float: right" action="{!showListOfCartItems}" rerender="Cart_List"/>
+                <apex:pageBlockTable value="{!productList}" var="products">
+                    <apex:column headerValue="Selected Products">
+                        <apex:inputCheckbox value="{!products.isSelected}">
+                            <apex:actionSupport event="onClick" action="{!GetSelected}"  rendered="Selected_PBS"/> 
+                        </apex:inputCheckbox>
+                    </apex:column>
+                    <apex:column value="{!products.name}" headerValue="Product Name"/>
+                    <apex:column value="{!products.productcode}" headerValue="Product Code"/>
+                    <apex:column value="{!products.description}" headerValue="Description"/>
+                    <apex:column value="{!products.price_per_unit}" headerValue="Price Per Unit"/>
+                    <apex:column value="{!products.quantity_available}" headerValue="Quantity Available"/>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+        </apex:outputPanel>
+        <apex:outputPanel id="Cart_List">
+            <apex:pageBlock id="Cart_Items" title="Cart Items" rendered="{!ShowCart}">
+                <apex:pageBlockTable value="{!CartProducts}" var="lineItems">
+                    <apex:column value="{!lineItems.name}"/>
+                    <apex:column value="{!lineItems.ProductCode}"/>
+                    <apex:column value="{!lineItems.Price_Per_Unit__c}"/>
+                    <apex:column headerValue="Quantity">
+                        <apex:input disabled="{!isOrderPlaced}"/>
+                    </apex:column>
+                    <apex:column headervalue="Delete">
+                        <apex:commandLink value="Delete" action="{!deleteProduct}" reRender="Cart_Items" rendered="{!showDeleteButton}">
+                            <apex:param name="selected" value="{!lineItems.id}" assignTo="{!ProductId}"/>
+                        </apex:commandLink>
+                    </apex:column>
+                </apex:pageBlockTable>
+                <apex:pageBlockButtons >
+                    <apex:commandButton value="checkout" action="{!OpenPage}" rerender="Place_Order_List,Cart_List"/>
+                </apex:pageBlockButtons>
+            </apex:pageBlock>
+        </apex:outputPanel>
+        <apex:outputPanel id="Place_Order_List">
+            <apex:pageBlock id="In_Voice" title="InVoice No :" rendered="{!showPlaceOrder}">
+                Order Date: {!DAY(TODAY())}/{!MONTH(TODAY())}/{!YEAR(TODAY())}
+                <apex:pageBlockTable value="{!PlaceProducts}" var="placeItems">
+                    <apex:column value="{!placeItems.name}" headerValue="Product Name"/>
+                    <apex:column value="{!placeItems.productcode}" headerValue="Product Code"/>
+                    <apex:column headerValue="Quantity" value="{!placeItems.Quantity_Available__c}"/>
+                     <apex:column value="{!placeItems.Price_Per_Unit__c}" headerValue="Price Per Unit" />
+                    <apex:column headerValue="Total" >
+                    </apex:column>
+                </apex:pageBlockTable>
+                <apex:pageBlockButtons >
+                     <apex:commandButton value="Place Order" action="{!PlaceOrderButtonFunction}" />
+                </apex:pageBlockButtons>
+            </apex:pageBlock>
+        </apex:outputPanel>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,112 @@
+public class ShoppingCartController {
+    public id ProductId{get; set;}
+    public boolean ShowCart{get; set;}
+    public Boolean isOrderPlaced{get;set;}
+    public boolean ShowProducts{get; set;}
+    public boolean showPlaceOrder{get; set;}
+    public boolean showDeleteButton{get; set;}
+    public String searchValue{get; set;}
+    public List<productWrapper> productList{get;set;}
+    List<Product2> selectedProducts = new List<Product2>();
+    public List<String> listOfStrings {get; set;}
+    public ShoppingCartController(){
+        showDeleteButton = true;
+        ShowProducts = false;
+        ShowCart = false;
+        showPlaceOrder = false;
+        listOfStrings = new List<String>();
+        for(Product2 a: [SELECT id, Name From Product2 LIMIT 10]){
+            listOfStrings.add(a.name);
+        }
+    }
+    public List<PurchaseOrder__c> getPurchaseOrder(){
+        List<PurchaseOrder__c> listOfPurchaseOrder = [Select id, ToTal_Price__c, Order_Status__c From PurchaseOrder__c];
+        return listOfPurchaseOrder;
+    }
+    public List<Product2> getProductss(){
+        List<Product2> listOfProduct = [Select name, ProductCode, Description, Price_Per_Unit__c, Quantity_Available__c   From Product2];
+        productList = new List<productWrapper>();
+        for(Product2 product : listOfProduct){
+            productList.add(new productWrapper(product));
+        }
+        return listOfProduct;
+    }
+    public List<Product2> getCartProducts(){
+        return selectedProducts;
+   }
+    public List<Product2> getPlaceProducts(){   
+         return  SelectedProducts;     
+    }                   
+    public class ProductWrapper{
+        public Product2 product{get; set;}
+        public String name{get;set;}
+        public String productcode{get; set;}
+        public String description{get; set;}
+        public Decimal price_per_unit{get; set;}
+        public Decimal quantity_available{get; set;}
+        public Boolean isSelected{get; set;}
+        public productWrapper(Product2 pro){
+            product = pro;
+            isSelected = false;
+            name = pro.Name;
+            productcode = pro.ProductCode;
+            description = pro.Description;
+            price_per_unit = pro.Price_Per_Unit__c;
+            quantity_available = pro.Quantity_Available__c;
+        }
+    }
+    public List<Product2> addToCart(){
+        if(selectedProducts.size() > 0)
+            return selectedProducts;
+        else
+            return null;
+    }
+    public PageReference getSelected(){
+       selectedProducts.clear();
+        for(ProductWrapper prowrapper : productList){
+            if(prowrapper.isSelected == true){
+                selectedProducts.add(prowrapper.product);
+            }
+        }
+        return null;
+    }
+    public List<Product2> GetSelectedProducts(){
+        if(selectedProducts.size()>0)
+            return selectedProducts;
+        else
+            return null;
+    }
+    public void showListOfProducts(){
+        this.ShowProducts = true;
+        getProductss();
+    }
+    public void showListOfCartItems(){
+        this.ShowCart = true;
+        getSelected();
+    }
+    public void deleteProduct(){
+         map<Id, Product2> mapOfProduct = new Map<Id, Product2>(selectedProducts);
+         mapOfProduct.remove(ProductId);
+         System.debug(mapOfProduct);  
+         selectedProducts = mapOfProduct.values();
+    }
+    public void OpenPage() {
+         showPlaceOrder = true;
+         isOrderPlaced= true;
+         showDeleteButton = false;       
+    }
+    public void PlaceOrderButtonFunction(){
+        ShowProducts = false;
+        ShowCart = false;
+        showPlaceOrder = false;
+        PurchaseOrder__c instanceSP = new PurchaseOrder__c(Order_Status__c = 'Pending');
+        insert instanceSP ;
+        for(Product2 sp : SelectedProducts){
+            PurchaseOrderLineItems__c instancePOLI = new PurchaseOrderLineItems__c();
+            instancePOLI.Name = sp.name;
+            instancePOLI.Price__c = sp.Price_Per_Unit__c;
+            instancePOLI.PurchaseOrder__c = instanceSP.Id ;
+            insert instancePOLI;
+        }
+    }
+}
